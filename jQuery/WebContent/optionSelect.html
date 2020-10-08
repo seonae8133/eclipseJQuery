@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>optionSelect.html</title>
+    <script src="js/jquery-3.5.1.min.js"></script>
+
+    <script>
+        // console.log(document.getElementsByName("sub").get); 
+        $(() => {
+            let subOP = $('#sub option');
+            let rejOP = $('#rej option');
+            let rejL = $('#rej');
+            let subL = $('#sub');
+
+            console.log(subOP);
+            console.log(rejOP);
+
+            $('#plus').on('click', function (event) {
+                event.preventDefault();
+                for (sub of subOP) {
+                    if (sub.selected) {
+                        rejL.append(sub);
+                        rejOP.push(sub);
+                    }
+                }
+            });
+
+            $('#minus').on('click', function (event) {
+                event.preventDefault();
+                for (rej of rejOP) {
+                    if (rej.selected) {
+                        subL.append(rej);
+                        subOP.push(rej);
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+
+
+<body id="s1">
+    <form>
+        <select id="sub" size="10">
+            <option>sub-1</option>
+            <option>sub-2</option>
+            <option>sub-3</option>
+            <option>sub-4</option>
+            <option>sub-5</option>
+        </select>
+        <button id="plus">+</button>
+        <button id="minus">-</button>
+        <select id="rej" size="10">
+            <option>rej-1</option>
+            <option>rej-2</option>
+            <option>rej-3</option>
+            <option>rej-4</option>
+            <option>rej-5</option>
+        </select>
+    </form>
+</body>
+
+</html>

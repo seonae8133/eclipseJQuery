@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>product.html</title>
+<script src="../js/jquery-3.5.1.min.js"></script>
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script>
+	$(document).ready(function() {
+	   let table = $('#example').DataTable( {
+	        "ajax": '../GetProductDataTable' ,// 전체 데이터를 조회해서 결과를 json 파일 만들어주는 서블릿(페이지).
+	        columns: [{"data" : 'itemNo'}, //보내줄 columns
+	        			{"data" : 'item'},
+	        			{"data" : 'category'},
+	        			{"data" : 'price'},
+	        			{"data" : 'content'},
+	        			{"data" : 'image'}]
+	    } );
+	   
+	   $('#example tbody').on('click','td', function() {//tbody영역중에서 tr태그를 클릭하면 실행하라~
+		   let data = table.row(this).data();
+	   		let elem = $(this); //td를elem에 담음
+	   		if(this.cellIndex== 0) {
+	   		location.href =data.link + "?itemNo=" + data.itemNo; //location.href =페이지 -> 클릭할때 마다 페이지 넘겨줌
+	   		} else {
+	   			//데이터베이스 삭제 후 화면에서 지우기.
+	   			//DAO에 itemNo 기준으로 db삭제하는 서블릿.
+	   			 $.ajax({
+	   				url:'../DeleteProductServlet',
+	   				type : 'post',
+	   				data: {
+	   					itemNo: data.itemNo
+	   				},
+	   				success:function() {
+	   					$(elem).parent().addClass('selected'); //this(=td).parent=tr전체를 삭제하기 위한 영역지정 + 클래스 추가
+	   					table.row('.selected').remove().draw(false);//draw(false) - datatable에서 제공해주는 메서드 사용./ 그냥remove만하면 1페이지 10개중에 1개만 삭제
+	   				},error: function (a,b) {
+	   					//console.log(a,b);
+	   				}
+	   			});
+	   			alert("del")
+	   		}
+	   });
+	} );
+</script>
+</head>
+<body>
+	<div style="height:20px";></div>
+	<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ItemNo</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Content</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>ItemNo</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Content</th>
+                <th>Image</th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>
